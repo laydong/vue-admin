@@ -47,7 +47,7 @@ router.beforeEach(async(to, from, next) => {
         asyncRouterFlag++
         await getRouter(userStore)
       }
-      next({ name: userStore.userInfo.authority.defaultRouter })
+      next({ name: 'dashboard' })
     } else {
       next()
     }

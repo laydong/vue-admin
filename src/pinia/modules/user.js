@@ -43,8 +43,8 @@ export const useUserStore = defineStore('user', () => {
   /* 获取用户信息*/
   const GetUserInfo = async() => {
     const res = await getUserInfo()
-    if (res.code === 0) {
-      setUserInfo(res.data.userInfo)
+    if (res.code === 200) {
+      setUserInfo(res.data)
     }
     return res
   }
@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', () => {
     })
     try {
       const res = await login(loginInfo)
-      if (res.code === 0) {
+      if (res.code === 200) {
         setUserInfo(res.data.user)
         setToken(res.data.token)
         const routerStore = useRouterStore()

@@ -38,6 +38,7 @@ service.interceptors.request.use(
     const userStore = useUserStore()
     config.headers = {
       'Content-Type': 'application/json',
+      'Authorization': userStore.token,
       'x-token': userStore.token,
       'x-user-id': userStore.userInfo.ID,
       ...config.headers
@@ -63,7 +64,7 @@ service.interceptors.response.use(
     if (response.headers['new-token']) {
       userStore.setToken(response.headers['new-token'])
     }
-    if (response.data.code === 0 || response.headers.success === 'true') {
+    if (response.data.code === 200 || response.headers.success === 'true') {
       if (response.headers.msg) {
         response.data.msg = decodeURI(response.headers.msg)
       }

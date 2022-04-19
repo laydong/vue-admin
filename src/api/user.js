@@ -5,7 +5,7 @@ import service from '@/utils/request'
 // @Router /base/login [post]
 export const login = (data) => {
   return service({
-    url: '/base/login',
+    url: '/v1/login',
     method: 'post',
     data: data
   })
@@ -17,7 +17,7 @@ export const login = (data) => {
 // @Router /base/captcha [post]
 export const captcha = (data) => {
   return service({
-    url: '/base/captcha',
+    url: '/v1/captcha',
     method: 'post',
     data: data
   })
@@ -152,7 +152,7 @@ export const setUserAuthorities = (data) => {
 // @Router /user/getUserInfo [get]
 export const getUserInfo = () => {
   return service({
-    url: '/user/getUserInfo',
+    url: '/v1/user/info',
     method: 'get'
   })
 }
