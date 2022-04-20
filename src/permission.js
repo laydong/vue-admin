@@ -9,10 +9,11 @@ const whiteList = ['Login', 'Init']
 
 const getRouter = async(userStore) => {
   const routerStore = useRouterStore()
-  // console.log(routerStore)
+
   await routerStore.SetAsyncRouter()
   await userStore.GetUserInfo()
   const asyncRouters = routerStore.asyncRouters
+  console.log(routerStore.SetAsyncRouter())
   asyncRouters.forEach(asyncRouter => {
     router.addRoute(asyncRouter)
   })
@@ -46,10 +47,9 @@ router.beforeEach(async(to, from, next) => {
     if (token) {
       if (!asyncRouterFlag && whiteList.indexOf(from.name) < 0) {
         asyncRouterFlag++
-        // await getRouter(userStore)
+        await getRouter(userStore)
       }
-      // next({ name: '/index' })
-      // next({ path: '/layout/404' })
+
       next({ name: 'index' })
       // next({ name: userStore.userInfo.authority.defaultRouter })
     } else {
