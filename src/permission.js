@@ -13,7 +13,6 @@ const getRouter = async(userStore) => {
   await routerStore.SetAsyncRouter()
   await userStore.GetUserInfo()
   const asyncRouters = routerStore.asyncRouters
-  console.log(routerStore.SetAsyncRouter())
   asyncRouters.forEach(asyncRouter => {
     router.addRoute(asyncRouter)
   })
@@ -49,9 +48,7 @@ router.beforeEach(async(to, from, next) => {
         asyncRouterFlag++
         await getRouter(userStore)
       }
-
-      next({ name: 'index' })
-      // next({ name: userStore.userInfo.authority.defaultRouter })
+      next({ name: 'dashboard' })
     } else {
       next()
     }

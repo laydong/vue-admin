@@ -2,7 +2,7 @@
   <div class="router-history">
     <el-tabs
       v-model="activeValue"
-      :closable="!(historys.length === 1 && $route.name === defaultRouter)"
+      :closable="!(historys.length === 1 && $route.name === 'dashboard')"
       type="card"
       @contextmenu.prevent="openContextMenu($event)"
       @tab-click="changeTab"
@@ -83,7 +83,7 @@ const top = ref(0)
 const isCollapse = ref(false)
 const isMobile = ref(false)
 const rightActive = ref('')
-const defaultRouter = computed(() => userStore.userInfo.authority.defaultRouter)
+const defaultRouter = computed(() => 'dashboard')
 const openContextMenu = (e) => {
   if (
     historys.value.length === 1 &&

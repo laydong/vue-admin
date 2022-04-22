@@ -1,10 +1,10 @@
 <template>
   <el-menu-item :index="routerInfo.name">
-    <el-icon v-if="routerInfo.meta.icon">
-      <component :is="routerInfo.meta.icon" />
+    <el-icon v-if="routerInfo.icon">
+      <component :is="routerInfo.icon" />
     </el-icon>
     <template #title>
-      <span class="gva-menu-item-title">{{ routerInfo.meta.title }}</span>
+      <span class="gva-menu-item-title">{{ routerInfo.title }}</span>
     </template>
   </el-menu-item>
 </template>

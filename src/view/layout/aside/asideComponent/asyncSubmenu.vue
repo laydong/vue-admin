@@ -1,10 +1,10 @@
 <template>
   <el-sub-menu ref="subMenu" :index="routerInfo.name">
     <template #title>
-      <el-icon v-if="routerInfo.meta.icon">
-        <component :is="routerInfo.meta.icon" />
+      <el-icon v-if="routerInfo.icon">
+        <component :is="routerInfo.icon" />
       </el-icon>
-      <span>{{ routerInfo.meta.title }}</span>
+      <span>{{ routerInfo.title }}</span>
     </template>
     <slot />
   </el-sub-menu>

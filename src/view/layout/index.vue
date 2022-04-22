@@ -31,7 +31,7 @@
                         <el-breadcrumb-item
                           v-for="item in matched.slice(1,matched.length)"
                           :key="item.path"
-                        >{{ route.params.title || item.meta.title }}</el-breadcrumb-item>
+                        >{{ route.params.title || item.title }}</el-breadcrumb-item>
                       </el-breadcrumb>
                     </el-col>
                     <el-col :xs="12" :lg="9" :md="9" :sm="14" :xl="9">
@@ -51,16 +51,9 @@
                             <el-dropdown-menu class="dropdown-group">
                               <el-dropdown-item>
                                 <span style="font-weight: 600;">
-                                  当前角色：{{ userStore.userInfo.authority.authorityName }}
+                                  当前角色：{{ userStore.userInfo.id }}
                                 </span>
                               </el-dropdown-item>
-                              <template v-if="userStore.userInfo.authorities">
-                                <el-dropdown-item v-for="item in userStore.userInfo.authorities.filter(i=>i.authorityId!==userStore.userInfo.authorityId)" :key="item.authorityId" @click="changeUserAuth(item.authorityId)">
-                                  <span>
-                                    切换为：{{ item.authorityName }}
-                                  </span>
-                                </el-dropdown-item>
-                              </template>
                               <el-dropdown-item icon="avatar" @click="toPerson">个人信息</el-dropdown-item>
                               <el-dropdown-item icon="reading-lamp" @click="userStore.LoginOut">登 出</el-dropdown-item>
                             </el-dropdown-menu>

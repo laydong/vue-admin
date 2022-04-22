@@ -9,13 +9,12 @@ const keepAliveRoutersArr = []
 
 const formatRouter = (routes, routeMap) => {
   routes && routes.forEach(item => {
-    console.log(item)
     if ((!item.children || item.children.every(ch => ch.hidden)) && item.name !== '404' && !item.hidden) {
       routerListArr.push({ label: item.title, value: item.url })
     }
     // item.meta.btns = item.btns
-    // item.meta.hidden = item.hidden
-    // routeMap[item.name] = item
+    // item.hidden = item.hidden
+    routeMap[item.name] = item
     if (item.children && item.children.length > 0) {
       formatRouter(item.children, routeMap)
     }
@@ -41,48 +40,46 @@ export const useRouterStore = defineStore('router', () => {
   const routeMap = ({})
   // 从后台获取动态路由
   const SetAsyncRouter = async() => {
-    // const baseRouter = [{
-    //   path: '/layout',
-    //   name: 'layout',
-    //   component: 'view/layout/index.vue',
-    //   meta: {
-    //     title: '底层layout'
-    //   },
-    //   children: []
-    // }]
+    const baseRouter = [{
+      path: '/layout',
+      name: 'layout',
+      component: 'view/layout/index.vue',
+      meta: {
+        title: '底层layout'
+      },
+      children: []
+    }]
     const asyncRouterRes = await asyncMenu()
     const asyncRouter = asyncRouterRes.data
-    // asyncRouter && asyncRouter.push({
-    //   path: '404',
-    //   name: '404',
-    //   hidden: true,
-    //   meta: {
-    //     title: '迷路了*。*',
-    //     closeTab: true,
-    //   },
-    //   component: 'view/error/index.vue'
-    // }, {
-    //   path: 'reload',
-    //   name: 'Reload',
-    //   hidden: true,
-    //   meta: {
-    //     title: '',
-    //     closeTab: true,
-    //   },
-    //   component: 'view/error/reload.vue'
-    // })
-    console.log(1111)
+    asyncRouter && asyncRouter.push({
+      path: '404',
+      name: '404',
+      hidden: true,
+      meta: {
+        title: '迷路了*。*',
+        closeTab: true,
+      },
+      component: 'view/error/index.vue'
+    }, {
+      path: 'reload',
+      name: 'Reload',
+      hidden: true,
+      meta: {
+        title: '',
+        closeTab: true,
+      },
+      component: 'view/error/reload.vue'
+    })
     formatRouter(asyncRouter, routeMap)
-    // baseRouter[0].children = asyncRouter
-    // baseRouter.push({
-    //   path: '/:catchAll(.*)',
-    //   redirect: '/layout/404'
-    //
-    // })
-    // console.log(baseRouter)
-    // asyncRouterHandle(baseRouter)
+    baseRouter[0].children = asyncRouter
+    baseRouter.push({
+      path: '/:catchAll(.*)',
+      redirect: '/layout/404'
+
+    })
+    asyncRouterHandle(baseRouter)
     KeepAliveFilter(asyncRouter)
-    // asyncRouters.value = baseRouter
+    asyncRouters.value = baseRouter
     routerList.value = routerListArr
     keepAliveRouters.value = keepAliveRoutersArr
     return true
