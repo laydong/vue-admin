@@ -127,11 +127,15 @@ const enterAndNext = () => {
 const menuTree = ref(null)
 const relation = async() => {
   const checkArr = menuTree.value.getCheckedNodes(false, true)
-  const res = await addMenuAuthority({
-    menus: checkArr,
-    id: props.row.id
+  const arr = []
+  checkArr.forEach(item => {
+    arr.push(Number(item.id))
   })
-  if (res.code === 0) {
+  const res = await addMenuAuthority({
+    ids: arr,
+    role_id: props.row.id
+  })
+  if (res.code === 200) {
     ElMessage({
       type: 'success',
       message: '菜单设置成功!'
