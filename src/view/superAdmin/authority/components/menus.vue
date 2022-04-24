@@ -10,7 +10,7 @@
       :props="menuDefaultProps"
       default-expand-all
       highlight-current
-      node-key="ID"
+      node-key="id"
       show-checkbox
       @check="nodeChange"
     >
@@ -21,14 +21,14 @@
             <el-button
               type="text"
               size="small"
-              :style="{color:row.defaultRouter === data.name?'#E6A23C':'#85ce61'}"
+              :style="{color:row.name === data.name?'#E6A23C':'#85ce61'}"
               :disabled="!node.checked"
               @click="() => setDefault(data)"
             >
-              {{ row.defaultRouter === data.name?"首页":"设为首页" }}
+              {{ row.name === data.name?"首页":"设为首页" }}
             </el-button>
           </span>
-          <span v-if="data.menuBtn.length">
+          <span v-if="data.length">
             <el-button
               type="text"
               size="small"
@@ -87,21 +87,21 @@ const needConfirm = ref(false)
 const menuDefaultProps = ref({
   children: 'children',
   label: function(data) {
-    return data.meta.title
+    return data.title
   }
 })
 
 const init = async() => {
   // 获取所有菜单树
   const res = await getBaseMenuTree()
-  menuTreeData.value = res.data.data
+  menuTreeData.value = res.data
   const res1 = await getMenuAuthority({ id: props.row.id })
-  const menus = res1.data.data
+  const menus = res1.data
   const arr = []
   menus.forEach(item => {
     // 防止直接选中父级造成全选
-    if (!menus.some(same => same.parentId === item.menuId)) {
-      arr.push(Number(item.menuId))
+    if (!menus.some(same => same.parent_id === item.id)) {
+      arr.push(Number(item.id))
     }
   })
   menuTreeIds.value = arr
@@ -110,7 +110,7 @@ const init = async() => {
 init()
 
 const setDefault = async(data) => {
-  const res = await updateAuthority({ authorityId: props.row.authorityId, AuthorityName: props.row.authorityName, parentId: props.row.parentId, defaultRouter: data.name })
+  const res = await updateAuthority({ id: props.row.id, title: props.row.title, parent_id: props.row.parent_id, name: data.name })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '设置成功' })
     emit('changeRow', 'defaultRouter', res.data.authority.defaultRouter)
@@ -129,7 +129,7 @@ const relation = async() => {
   const checkArr = menuTree.value.getCheckedNodes(false, true)
   const res = await addMenuAuthority({
     menus: checkArr,
-    authorityId: props.row.authorityId
+    id: props.row.id
   })
   if (res.code === 0) {
     ElMessage({
@@ -139,7 +139,7 @@ const relation = async() => {
   }
 }
 
-defineExpose({ enterAndNext, needConfirm })
+// defineExpose({ enterAndNext, needConfirm })
 
 const btnVisible = ref(false)
 
@@ -149,8 +149,8 @@ const btnTableRef = ref()
 let menuID = ''
 const OpenBtn = async(data) => {
   menuID = data.ID
-  const res = await getAuthorityBtnApi({ menuID: menuID, authorityId: props.row.authorityId })
-  if (res.code === 0) {
+  const res = await getAuthorityBtnApi({ menuID: menuID, id: props.row.id })
+  if (res.code === 200) {
     openDialog(data)
     await nextTick()
     if (res.data.selected) {
