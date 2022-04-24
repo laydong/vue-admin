@@ -94,9 +94,9 @@ const menuDefaultProps = ref({
 const init = async() => {
   // 获取所有菜单树
   const res = await getBaseMenuTree()
-  menuTreeData.value = res.data.menus
-  const res1 = await getMenuAuthority({ authorityId: props.row.authorityId })
-  const menus = res1.data.menus
+  menuTreeData.value = res.data.data
+  const res1 = await getMenuAuthority({ id: props.row.id })
+  const menus = res1.data.data
   const arr = []
   menus.forEach(item => {
     // 防止直接选中父级造成全选

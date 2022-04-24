@@ -1,6 +1,5 @@
 <template>
   <div class="authority">
-    <warning-bar title="注：右上角头像下拉可切换角色" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button size="small" type="primary" icon="plus" @click="addAuthority('0')">新增角色</el-button>
@@ -8,11 +7,28 @@
       <el-table
         :data="tableData"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-        row-key="authorityId"
+        row-key="id"
         style="width: 100%"
       >
-        <el-table-column label="角色ID" min-width="180" prop="authorityId" />
-        <el-table-column align="left" label="角色名称" min-width="180" prop="authorityName" />
+        <el-table-column label="角色ID" min-width="180" prop="id" />
+        <el-table-column align="left" label="角色名称" min-width="180" prop="name" />
+        <el-table-column align="left" label="状态" min-width="100" prop="status">
+          <template #default="scope">
+            <span>{{ scope.row.status?"正常":"禁用" }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="是否超管" min-width="100" prop="is_admin">
+          <template #default="scope">
+            <span>{{ scope.row.is_admin?"是":"否" }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="备注" min-width="180" prop="remark" />
+        <el-table-column align="left" label="创建时间" min-width="180">
+          <template #default="scope">{{ formatDate(scope.row.created_at) }}</template>
+        </el-table-column>
+        <el-table-column align="left" label="更新时间" min-width="180">
+          <template #default="scope">{{ formatDate(scope.row.updated_at) }}</template>
+        </el-table-column>
         <el-table-column align="left" label="操作" width="460">
           <template #default="scope">
             <el-button
@@ -25,14 +41,14 @@
               icon="plus"
               size="small"
               type="text"
-              @click="addAuthority(scope.row.authorityId)"
+              @click="addAuthority(scope.row.id)"
             >新增子角色</el-button>
-            <el-button
-              icon="copy-document"
-              size="small"
-              type="text"
-              @click="copyAuthorityFunc(scope.row)"
-            >拷贝</el-button>
+<!--            <el-button-->
+<!--              icon="copy-document"-->
+<!--              size="small"-->
+<!--              type="text"-->
+<!--              @click="copyAuthorityFunc(scope.name)"-->
+<!--            >拷贝</el-button>-->
             <el-button
               icon="edit"
               size="small"
@@ -52,22 +68,37 @@
     <!-- 新增角色弹窗 -->
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="父级角色" prop="parentId">
-          <el-cascader
-            v-model="form.parentId"
-            style="width:100%"
-            :disabled="dialogType=='add'"
-            :options="AuthorityOption"
-            :props="{ checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
-            :show-all-levels="false"
-            filterable
-          />
+        <el-form-item label="上级角色" prop="parent_id">
+          <el-select v-model="form.parent_id" placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in AuthorityOption"
+                :key="item.id"
+                :label="`${item.name}`"
+                :value="item.id"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="角色ID" prop="authorityId">
-          <el-input v-model="form.authorityId" :disabled="dialogType=='edit'" autocomplete="off" />
+        <el-form-item label="角色ID" prop="id" v-show="play">
+          <el-input v-model="form.id" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="角色姓名" prop="authorityName">
-          <el-input v-model="form.authorityName" autocomplete="off" />
+        <el-form-item label="角色姓名" prop="name" required>
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status" required>
+          <el-switch
+              v-model="form.status"
+              active-value="1"
+              inactive-value="0"
+          ></el-switch>
+        </el-form-item>
+        <el-form-item label="是否超管" prop="is_admin" style="width:30%">
+          <el-select v-model="form.is_admin" style="width:100%">
+            <el-option :value="0" label="否" />
+            <el-option :value="1" label="是" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -106,8 +137,8 @@ import {
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
 import Apis from '@/view/superAdmin/authority/components/apis.vue'
 import Datas from '@/view/superAdmin/authority/components/datas.vue'
-import warningBar from '@/components/warningBar/warningBar.vue'
-
+// import warningBar from '@/components/warningBar/warningBar.vue'
+import { formatDate } from '@/utils/format'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -120,8 +151,8 @@ const mustUint = (rule, value, callback) => {
 
 const AuthorityOption = ref([
   {
-    authorityId: '0',
-    authorityName: '根角色'
+    id: '0',
+    name: '根角色'
   }
 ])
 const drawer = ref(false)
@@ -134,9 +165,9 @@ const apiDialogFlag = ref(false)
 const copyForm = ref({})
 
 const form = ref({
-  authorityId: '',
-  authorityName: '',
-  parentId: '0'
+  id: '',
+  name: '',
+  parent_id: '0'
 })
 const rules = ref({
   authorityId: [
@@ -155,16 +186,16 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(999)
 const tableData = ref([])
-const searchInfo = ref({})
+// const searchInfo = ref({})
 
 // 查询
 const getTableData = async() => {
-  const table = await getAuthorityList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
-  if (table.code === 0) {
-    tableData.value = table.data.list
+  const table = await getAuthorityList(page.value, pageSize.value)
+  if (table.code === 200) {
+    tableData.value = table.data.data
     total.value = table.data.total
     page.value = table.data.page
-    pageSize.value = table.data.pageSize
+    pageSize.value = table.data.size
   }
 }
 
@@ -186,16 +217,16 @@ const autoEnter = (activeName, oldActiveName) => {
   }
 }
 // 拷贝角色
-const copyAuthorityFunc = (row) => {
-  setOptions()
-  dialogTitle.value = '拷贝角色'
-  dialogType.value = 'copy'
-  for (const k in form.value) {
-    form.value[k] = row[k]
-  }
-  copyForm.value = row
-  dialogFormVisible.value = true
-}
+// const copyAuthorityFunc = (row) => {
+//   setOptions()
+//   dialogTitle.value = '拷贝角色'
+//   dialogType.value = 'copy'
+//   for (const k in form.value) {
+//     form.value[k] = row[k]
+//   }
+//   copyForm.value = row
+//   dialogFormVisible.value = true
+// }
 const opdendrawer = (row) => {
   drawer.value = true
   activeRow.value = row
@@ -208,8 +239,8 @@ const deleteAuth = (row) => {
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteAuthority({ authorityId: row.authorityId })
-      if (res.code === 0) {
+      const res = await deleteAuthority({ role_id: row.id })
+      if (res.code === 200) {
         ElMessage({
           type: 'success',
           message: '删除成功!'
@@ -234,9 +265,12 @@ const initForm = () => {
     authorityForm.value.resetFields()
   }
   form.value = {
-    authorityId: '',
-    authorityName: '',
-    parentId: '0'
+    id: 0,
+    name: '',
+    parent_id: 0,
+    status: 0,
+    is_admin: 0,
+    remark: ''
   }
 }
 // 关闭窗口
@@ -248,7 +282,7 @@ const closeDialog = () => {
 // 确定弹窗
 
 const enterDialog = () => {
-  if (form.value.authorityId === '0') {
+  if (form.value.id === '0') {
     ElMessage({
       type: 'error',
       message: '角色id不能为0'
@@ -261,7 +295,7 @@ const enterDialog = () => {
         case 'add':
           {
             const res = await createAuthority(form.value)
-            if (res.code === 0) {
+            if (res.code === 200) {
               ElMessage({
                 type: 'success',
                 message: '添加成功!'
@@ -318,34 +352,39 @@ const enterDialog = () => {
 const setOptions = () => {
   AuthorityOption.value = [
     {
-      authorityId: '0',
-      authorityName: '根角色'
+      id: 0,
+      name: '顶级角色'
     }
   ]
   setAuthorityOptions(tableData.value, AuthorityOption.value, false)
 }
 const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
-  form.value.authorityId = String(form.value.authorityId)
   AuthorityData &&
         AuthorityData.forEach(item => {
           if (item.children && item.children.length) {
             const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === form.value.authorityId,
+              id: item.id,
+              name: item.name,
+              status: item.status,
+              is_admin: item.is_admin,
+              remark: item.remark,
+              disabled: disabled || item.id === form.value.id,
               children: []
             }
             setAuthorityOptions(
               item.children,
               option.children,
-              disabled || item.authorityId === form.value.authorityId
+              disabled || item.id === form.value.id
             )
             optionsData.push(option)
           } else {
             const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === form.value.authorityId
+              id: item.id,
+              name: item.name,
+              status: item.status,
+              is_admin: item.is_admin,
+              remark: item.remark,
+              disabled: disabled || item.id === form.value.id
             }
             optionsData.push(option)
           }

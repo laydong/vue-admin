@@ -1,10 +1,9 @@
 import service from '@/utils/request'
 // @Router /authority/getAuthorityList [post]
-export const getAuthorityList = (data) => {
+export const getAuthorityList = (page, size) => {
   return service({
-    url: '/authority/getAuthorityList',
-    method: 'post',
-    data
+    url: '/v1/role/list' + '?page=' + page + '&size=' + size,
+    method: 'get',
   })
 }
 
@@ -17,7 +16,7 @@ export const getAuthorityList = (data) => {
 // @Router /authority/deleteAuthority [post]
 export const deleteAuthority = (data) => {
   return service({
-    url: '/authority/deleteAuthority',
+    url: '/v1/role/del',
     method: 'post',
     data
   })
@@ -75,11 +74,11 @@ export const setDataAuthority = (data) => {
 // @Produce application/json
 // @Param data body model.SysAuthority true "修改角色"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"设置成功"}"
-// @Router /authority/setDataAuthority [post]
+// @Router /v1/role/set [post]
 export const updateAuthority = (data) => {
   return service({
-    url: '/authority/updateAuthority',
-    method: 'put',
+    url: '/v1/role/set',
+    method: 'post',
     data
   })
 }

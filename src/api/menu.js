@@ -43,8 +43,8 @@ export const addBaseMenu = (data) => {
 // @Router /menu/getBaseMenuTree [post]
 export const getBaseMenuTree = () => {
   return service({
-    url: '/menu/getBaseMenuTree',
-    method: 'post'
+    url: '/v1/menu/list',
+    method: 'get'
   })
 }
 
@@ -66,8 +66,8 @@ export const addMenuAuthority = (data) => {
 // @Router /menu/getMenuAuthority [post]
 export const getMenuAuthority = (data) => {
   return service({
-    url: '/menu/getMenuAuthority',
-    method: 'post',
+    url: '/v1/menu/user_menu',
+    method: 'get',
     data
   })
 }
