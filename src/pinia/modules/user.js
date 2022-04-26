@@ -76,7 +76,7 @@ export const useUserStore = defineStore('user', () => {
   /* 登出*/
   const LoginOut = async() => {
     const res = await jsonInBlacklist()
-    if (res.code === 0) {
+    if (res.code === 200) {
       token.value = ''
       sessionStorage.clear()
       localStorage.clear()
@@ -87,7 +87,7 @@ export const useUserStore = defineStore('user', () => {
   /* 设置侧边栏模式*/
   const changeSideMode = async(data) => {
     const res = await setSelfInfo({ sideMode: data })
-    if (res.code === 0) {
+    if (res.code === 200) {
       userInfo.value.sideMode = data
       ElMessage({
         type: 'success',

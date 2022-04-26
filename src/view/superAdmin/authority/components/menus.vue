@@ -95,16 +95,16 @@ const init = async() => {
   // 获取所有菜单树
   const res = await getBaseMenuTree()
   menuTreeData.value = res.data
-  const res1 = await getMenuAuthority({ id: props.row.id })
-  const menus = res1.data
-  const arr = []
-  menus.forEach(item => {
-    // 防止直接选中父级造成全选
-    if (!menus.some(same => same.parent_id === item.id)) {
-      arr.push(Number(item.id))
-    }
-  })
-  menuTreeIds.value = arr
+  const res1 = await getMenuAuthority(props.row.id)
+  // const menus = res1.data
+  // const arr = []
+  // menus.forEach(item => {
+  //   // 防止直接选中父级造成全选
+  //   if (!menus.some(same => same.parent_id === item.id)) {
+  //     arr.push(Number(item.id))
+  //   }
+  // })
+  menuTreeIds.value = res1.data
 }
 
 init()
@@ -120,9 +120,9 @@ const nodeChange = () => {
   needConfirm.value = true
 }
 // 暴露给外层使用的切换拦截统一方法
-const enterAndNext = () => {
-  relation()
-}
+// const enterAndNext = () => {
+//   relation()
+// }
 // 关联树 确认方法
 const menuTree = ref(null)
 const relation = async() => {

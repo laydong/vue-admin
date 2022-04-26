@@ -43,12 +43,6 @@
               type="text"
               @click="addAuthority(scope.row.id)"
             >新增子角色</el-button>
-<!--            <el-button-->
-<!--              icon="copy-document"-->
-<!--              size="small"-->
-<!--              type="text"-->
-<!--              @click="copyAuthorityFunc(scope.name)"-->
-<!--            >拷贝</el-button>-->
             <el-button
               icon="edit"
               size="small"
@@ -117,9 +111,9 @@
         <el-tab-pane label="角色api">
           <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
-        <el-tab-pane label="资源权限">
-          <Datas ref="datas" :authority="tableData" :row="activeRow" @changeRow="changeRow" />
-        </el-tab-pane>
+<!--        <el-tab-pane label="资源权限">-->
+<!--          <Datas ref="datas" :authority="tableData" :row="activeRow" @changeRow="changeRow" />-->
+<!--        </el-tab-pane>-->
       </el-tabs>
     </el-drawer>
   </div>
@@ -136,7 +130,7 @@ import {
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
 import Apis from '@/view/superAdmin/authority/components/apis.vue'
-import Datas from '@/view/superAdmin/authority/components/datas.vue'
+// import Datas from '@/view/superAdmin/authority/components/datas.vue'
 // import warningBar from '@/components/warningBar/warningBar.vue'
 import { formatDate } from '@/utils/format'
 import { ref } from 'vue'
@@ -308,7 +302,7 @@ const enterDialog = () => {
         case 'edit':
           {
             const res = await updateAuthority(form.value)
-            if (res.code === 0) {
+            if (res.code === 200) {
               ElMessage({
                 type: 'success',
                 message: '添加成功!'

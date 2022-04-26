@@ -92,8 +92,8 @@ export const setAuthApi = (data) => {
 // @Router /api/getAllApis [post]
 export const getAllApis = (data) => {
   return service({
-    url: '/api/getAllApis',
-    method: 'post',
+    url: '/v1/menu/list',
+    method: 'get',
     data
   })
 }

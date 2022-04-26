@@ -5,7 +5,7 @@ import service from '@/utils/request'
 // @Router /menu/getMenu [post]
 export const asyncMenu = () => {
   return service({
-    url: '/v1/menu/list',
+    url: '/v1/menu/web_list',
     method: 'get'
   })
 }
@@ -43,7 +43,7 @@ export const addBaseMenu = (data) => {
 // @Router /menu/getBaseMenuTree [post]
 export const getBaseMenuTree = () => {
   return service({
-    url: '/v1/menu/list',
+    url: '/v1/menu/web_list',
     method: 'get'
   })
 }
@@ -54,7 +54,7 @@ export const getBaseMenuTree = () => {
 // @Router /menu/getMenuList [post]
 export const addMenuAuthority = (data) => {
   return service({
-    url: '/menu/addMenuAuthority',
+    url: '/v1/role/up_web_menu',
     method: 'post',
     data
   })
@@ -64,11 +64,10 @@ export const addMenuAuthority = (data) => {
 // @Produce  application/json
 // @Param authorityId string
 // @Router /menu/getMenuAuthority [post]
-export const getMenuAuthority = (data) => {
+export const getMenuAuthority = (id) => {
   return service({
-    url: '/v1/menu/user_menu',
-    method: 'get',
-    data
+    url: '/v1/role/web_user_menu?role_id=' + id,
+    method: 'get'
   })
 }
 

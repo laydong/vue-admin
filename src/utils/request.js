@@ -69,6 +69,12 @@ service.interceptors.response.use(
         response.data.msg = decodeURI(response.headers.msg)
       }
       return response.data
+    } else if (response.data.code === 401) {
+      window.localStorage.setItem('token', '')
+      sessionStorage.clear()
+      localStorage.clear()
+      router.push({ name: 'Login', replace: true })
+      window.location.reload()
     } else {
       ElMessage({
         showClose: true,

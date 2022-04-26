@@ -9,7 +9,7 @@ import service from '@/utils/request'
 // @Router /casbin/UpdateCasbin [post]
 export const UpdateCasbin = (data) => {
   return service({
-    url: '/casbin/updateCasbin',
+    url: '/v1/role/up_api_menu',
     method: 'post',
     data
   })
@@ -23,10 +23,9 @@ export const UpdateCasbin = (data) => {
 // @Param data body api.CreateAuthorityPatams true "获取权限列表"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /casbin/getPolicyPathByAuthorityId [post]
-export const getPolicyPathByAuthorityId = (data) => {
+export const getAuthorityId = (id) => {
   return service({
-    url: '/casbin/getPolicyPathByAuthorityId',
-    method: 'post',
-    data
+    url: '/v1/role/api_user_menu?role_id=' + id,
+    method: 'get'
   })
 }
