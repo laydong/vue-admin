@@ -1,5 +1,6 @@
 <template>
   <div class="authority">
+    <warning-bar title="注：右上角头像下拉可切换角色" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button size="small" type="primary" icon="plus" @click="addAuthority('0')">新增角色</el-button>
@@ -81,14 +82,14 @@
 
         <el-form-item label="状态" prop="status" style="width:30%" required>
           <el-radio-group v-model="form.status">
-            <el-radio :label=1>启用</el-radio>
-            <el-radio :label=0>禁用</el-radio>
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="是否超管" prop="is_admin" style="width:30%" required>
           <el-radio-group v-model="form.is_admin">
-            <el-radio :label=1>是</el-radio>
-            <el-radio :label=0>是</el-radio>
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -300,7 +301,7 @@ const enterDialog = () => {
             if (res.code === 200) {
               ElMessage({
                 type: 'success',
-                message: '添加成功!'
+                message: '更新成功!'
               })
               getTableData()
               closeDialog()
@@ -348,6 +349,7 @@ const setOptions = () => {
   setAuthorityOptions(tableData.value, AuthorityOption.value, false)
 }
 const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
+  form.value.authorityId = String(form.value.authorityId)
   AuthorityData &&
         AuthorityData.forEach(item => {
           if (item.children && item.children.length) {
