@@ -19,9 +19,8 @@ export const asyncMenu = () => {
 // @Router /menu/getMenuList [post]
 export const getMenuList = (data) => {
   return service({
-    url: '/menu/getMenuList',
-    method: 'post',
-    data
+    url: '/v1/menu/web_list',
+    method: 'get'
   })
 }
 

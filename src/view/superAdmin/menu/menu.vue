@@ -7,29 +7,29 @@
 
       <!-- 由于此处菜单跟左侧列表一一对应所以不需要分页 pageSize默认999 -->
       <el-table :data="tableData" row-key="ID">
-        <el-table-column align="left" label="ID" min-width="100" prop="ID" />
+        <el-table-column align="left" label="ID" min-width="100" prop="id" />
         <el-table-column align="left" label="路由Name" show-overflow-tooltip min-width="160" prop="name" />
         <el-table-column align="left" label="路由Path" show-overflow-tooltip min-width="160" prop="path" />
         <el-table-column align="left" label="是否隐藏" min-width="100" prop="hidden">
           <template #default="scope">
-            <span>{{ scope.row.hidden?"隐藏":"显示" }}</span>
+            <span>{{ scope.row.hidden==1?"隐藏":"显示" }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="父节点" min-width="90" prop="parentId" />
+        <el-table-column align="left" label="父节点" min-width="90" prop="parent_id" />
         <el-table-column align="left" label="排序" min-width="70" prop="sort" />
         <el-table-column align="left" label="文件路径" min-width="360" prop="component" />
         <el-table-column align="left" label="展示名称" min-width="120" prop="authorityName">
           <template #default="scope">
-            <span>{{ scope.row.meta.title }}</span>
+            <span>{{ scope.row.title }}</span>
           </template>
         </el-table-column>
         <el-table-column align="left" label="图标" min-width="140" prop="authorityName">
           <template #default="scope">
-            <div v-if="scope.row.meta.icon" class="icon-column">
+            <div v-if="scope.row.icon" class="icon-column">
               <el-icon>
-                <component :is="scope.row.meta.icon" />
+                <component :is="scope.row.icon" />
               </el-icon>
-              <span>{{ scope.row.meta.icon }}</span>
+              <span>{{ scope.row.icon }}</span>
             </div>
           </template>
         </el-table-column>
@@ -256,8 +256,9 @@ const searchInfo = ref({})
 // 查询
 const getTableData = async() => {
   const table = await getMenuList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
-  if (table.code === 0) {
-    tableData.value = table.data.list
+  if (table.code === 200) {
+    console.log(table)
+    tableData.value = table.data
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
