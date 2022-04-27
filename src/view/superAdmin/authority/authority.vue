@@ -65,31 +65,31 @@
         <el-form-item label="上级角色" prop="parent_id">
           <el-select v-model="form.parent_id" placeholder="请选择" style="width:100%">
             <el-option
-                v-for="item in AuthorityOption"
-                :key="item.id"
-                :label="`${item.name}`"
-                :value="item.id"
+              v-for="item in AuthorityOption"
+              :key="item.id"
+              :label="`${item.name}`"
+              :value="item.id"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="角色ID" prop="id" v-show="play">
+        <el-form-item v-show="play" label="角色ID" prop="id">
           <el-input v-model="form.id" autocomplete="off" />
         </el-form-item>
         <el-form-item label="角色姓名" prop="name" required>
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="状态" prop="status" required>
-          <el-switch
-              v-model="form.status"
-              active-value="1"
-              inactive-value="0"
-          ></el-switch>
+
+        <el-form-item label="状态" prop="status" style="width:30%" required>
+          <el-radio-group v-model="form.status">
+            <el-radio :label=1>启用</el-radio>
+            <el-radio :label=0>禁用</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否超管" prop="is_admin" style="width:30%">
-          <el-select v-model="form.is_admin" style="width:100%">
-            <el-option :value="0" label="否" />
-            <el-option :value="1" label="是" />
-          </el-select>
+        <el-form-item label="是否超管" prop="is_admin" style="width:30%" required>
+          <el-radio-group v-model="form.is_admin">
+            <el-radio :label=1>是</el-radio>
+            <el-radio :label=0>是</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" autocomplete="off" />
@@ -111,9 +111,6 @@
         <el-tab-pane label="角色api">
           <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
-<!--        <el-tab-pane label="资源权限">-->
-<!--          <Datas ref="datas" :authority="tableData" :row="activeRow" @changeRow="changeRow" />-->
-<!--        </el-tab-pane>-->
       </el-tabs>
     </el-drawer>
   </div>
@@ -130,8 +127,6 @@ import {
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
 import Apis from '@/view/superAdmin/authority/components/apis.vue'
-// import Datas from '@/view/superAdmin/authority/components/datas.vue'
-// import warningBar from '@/components/warningBar/warningBar.vue'
 import { formatDate } from '@/utils/format'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -159,9 +154,12 @@ const apiDialogFlag = ref(false)
 const copyForm = ref({})
 
 const form = ref({
-  id: '',
+  id: 0,
   name: '',
-  parent_id: '0'
+  parent_id: 0,
+  status: 0,
+  is_admin: 0,
+  remark: ''
 })
 const rules = ref({
   authorityId: [
@@ -210,17 +208,6 @@ const autoEnter = (activeName, oldActiveName) => {
     }
   }
 }
-// 拷贝角色
-// const copyAuthorityFunc = (row) => {
-//   setOptions()
-//   dialogTitle.value = '拷贝角色'
-//   dialogType.value = 'copy'
-//   for (const k in form.value) {
-//     form.value[k] = row[k]
-//   }
-//   copyForm.value = row
-//   dialogFormVisible.value = true
-// }
 const opdendrawer = (row) => {
   drawer.value = true
   activeRow.value = row
@@ -301,6 +288,14 @@ const enterDialog = () => {
           break
         case 'edit':
           {
+            if (form.value.status === 0) {
+              form.value.status = 2
+            }
+
+            if (form.value.is_admin === 0) {
+              form.value.is_admin = 2
+            }
+
             const res = await updateAuthority(form.value)
             if (res.code === 200) {
               ElMessage({
@@ -401,17 +396,11 @@ const editAuthority = (row) => {
   for (const key in form.value) {
     form.value[key] = row[key]
   }
+  console.log(form)
   setOptions()
   dialogFormVisible.value = true
 }
 
-</script>
-
-<script>
-
-export default {
-  name: 'Authority'
-}
 </script>
 
 <style lang="scss">
