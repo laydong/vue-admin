@@ -123,7 +123,6 @@ import {
   deleteAuthority,
   createAuthority,
   updateAuthority,
-  copyAuthority
 } from '@/api/authority'
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
@@ -132,12 +131,12 @@ import { formatDate } from '@/utils/format'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-const mustUint = (rule, value, callback) => {
-  if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
-    return callback(new Error('请输入正整数'))
-  }
-  return callback()
-}
+// const mustUint = (rule, value, callback) => {
+//   if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
+//     return callback(new Error('请输入正整数'))
+//   }
+//   return callback()
+// }
 
 const AuthorityOption = ref([
   {
@@ -152,7 +151,6 @@ const activeRow = ref({})
 const dialogTitle = ref('新增角色')
 const dialogFormVisible = ref(false)
 const apiDialogFlag = ref(false)
-const copyForm = ref({})
 
 const form = ref({
   id: 0,
@@ -162,18 +160,15 @@ const form = ref({
   is_admin: 0,
   remark: ''
 })
-const rules = ref({
-  authorityId: [
-    { required: true, message: '请输入角色ID', trigger: 'blur' },
-    { validator: mustUint, trigger: 'blur' }
-  ],
-  authorityName: [
-    { required: true, message: '请输入角色名', trigger: 'blur' }
-  ],
-  parentId: [
-    { required: true, message: '请选择请求方式', trigger: 'blur' }
-  ]
-})
+// const rules = ref({
+//   id: [
+//     { required: true, message: '请输入角色ID', trigger: 'blur' },
+//     { validator: mustUint, trigger: 'blur' }
+//   ],
+//   name: [
+//     { required: true, message: '请输入角色名', trigger: 'blur' }
+//   ]
+// })
 
 const page = ref(1)
 const total = ref(0)
@@ -264,18 +259,25 @@ const closeDialog = () => {
 // 确定弹窗
 
 const enterDialog = () => {
-  if (form.value.id === '0') {
-    ElMessage({
-      type: 'error',
-      message: '角色id不能为0'
-    })
-    return false
-  }
+  // if (form.value.parent_id === 0) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '角色不能为0'
+  //   })
+  //   return false
+  // }
   authorityForm.value.validate(async valid => {
     if (valid) {
       switch (dialogType.value) {
         case 'add':
           {
+            if (form.value.status === 0) {
+              form.value.status = 2
+            }
+
+            if (form.value.is_admin === 0) {
+              form.value.is_admin = 2
+            }
             const res = await createAuthority(form.value)
             if (res.code === 200) {
               ElMessage({
@@ -296,7 +298,6 @@ const enterDialog = () => {
             if (form.value.is_admin === 0) {
               form.value.is_admin = 2
             }
-
             const res = await updateAuthority(form.value)
             if (res.code === 200) {
               ElMessage({
@@ -308,30 +309,6 @@ const enterDialog = () => {
             }
           }
           break
-        case 'copy': {
-          const data = {
-            authority: {
-              authorityId: 'string',
-              authorityName: 'string',
-              datauthorityId: [],
-              parentId: 'string'
-            },
-            oldAuthorityId: 0
-          }
-          data.authority.authorityId = form.value.authorityId
-          data.authority.authorityName = form.value.authorityName
-          data.authority.parentId = form.value.parentId
-          data.authority.dataAuthorityId = copyForm.value.dataAuthorityId
-          data.oldAuthorityId = copyForm.value.authorityId
-          const res = await copyAuthority(data)
-          if (res.code === 0) {
-            ElMessage({
-              type: 'success',
-              message: '复制成功！'
-            })
-            getTableData()
-          }
-        }
       }
 
       initForm()
@@ -349,7 +326,6 @@ const setOptions = () => {
   setAuthorityOptions(tableData.value, AuthorityOption.value, false)
 }
 const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
-  form.value.authorityId = String(form.value.authorityId)
   AuthorityData &&
         AuthorityData.forEach(item => {
           if (item.children && item.children.length) {
@@ -386,7 +362,9 @@ const addAuthority = (parentId) => {
   initForm()
   dialogTitle.value = '新增角色'
   dialogType.value = 'add'
-  form.value.parentId = parentId
+  if (parentId > 0) {
+    form.value.parent_id = parentId
+  }
   setOptions()
   dialogFormVisible.value = true
 }
