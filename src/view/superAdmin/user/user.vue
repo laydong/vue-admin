@@ -1,32 +1,32 @@
 <template>
   <div>
-    <warning-bar title="注：右上角头像下拉可切换角色" />
+<!--    <warning-bar title="注：右上角头像下拉可切换角色" />-->
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
       </div>
       <el-table
         :data="tableData"
-        row-key="ID"
+        row-key="id"
       >
         <el-table-column align="left" label="头像" min-width="75">
           <template #default="scope">
-            <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
+            <CustomPic style="margin-top:8px" :pic-src="scope.row.avatar" />
           </template>
         </el-table-column>
-        <el-table-column align="left" label="ID" min-width="50" prop="ID" />
-        <el-table-column align="left" label="用户名" min-width="150" prop="userName" />
-        <el-table-column align="left" label="昵称" min-width="150" prop="nickName" />
-        <el-table-column align="left" label="手机号" min-width="180" prop="phone" />
+        <el-table-column align="left" label="ID" min-width="50" prop="id" />
+        <el-table-column align="left" label="用户名" min-width="150" prop="username" />
+        <el-table-column align="left" label="昵称" min-width="150" prop="nickname" />
+        <el-table-column align="left" label="手机号" min-width="180" prop="mobile" />
         <el-table-column align="left" label="邮箱" min-width="180" prop="email" />
         <el-table-column align="left" label="用户角色" min-width="200">
           <template #default="scope">
             <el-cascader
-              v-model="scope.row.authorityIds"
+              v-model="scope.row.role_id"
               :options="authOptions"
               :show-all-levels="false"
               collapse-tags
-              :props="{ multiple:true,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
+              :props="{ multiple:true,checkStrictly: true,label:'name',value:'role_id',disabled:'disabled',emitPath:false}"
               :clearable="false"
               @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
               @remove-tag="()=>{changeAuthority(scope.row,false)}"
@@ -74,36 +74,49 @@
     >
       <div style="height:60vh;overflow:auto;padding:0 12px;">
         <el-form ref="userForm" :rules="rules" :model="userInfo" label-width="80px">
-          <el-form-item v-if="dialogFlag === 'add'" label="用户名" prop="userName">
-            <el-input v-model="userInfo.userName" />
+          <el-form-item v-if="dialogFlag === 'add'" label="用户名" prop="username">
+            <el-input v-model="userInfo.username" />
           </el-form-item>
           <el-form-item v-if="dialogFlag === 'add'" label="密码" prop="password">
             <el-input v-model="userInfo.password" />
           </el-form-item>
-          <el-form-item label="昵称" prop="nickName">
-            <el-input v-model="userInfo.nickName" />
+          <el-form-item label="昵称" prop="nickname">
+            <el-input v-model="userInfo.nickname" />
           </el-form-item>
-          <el-form-item label="手机号" prop="phone">
-            <el-input v-model="userInfo.phone" />
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="userInfo.mobile" />
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="userInfo.email" />
           </el-form-item>
-          <el-form-item label="用户角色" prop="authorityId">
+          <el-form-item label="用户角色" prop="auth_role_id">
             <el-cascader
-              v-model="userInfo.authorityIds"
+              v-model="userInfo.role_id"
               style="width:100%"
               :options="authOptions"
               :show-all-levels="false"
-              :props="{ multiple:true,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
+              :props="{ multiple:true,checkStrictly: true,label:'name',value:'id',disabled:'disabled',emitPath:false}"
               :clearable="false"
             />
           </el-form-item>
           <el-form-item label="头像" label-width="80px">
             <div style="display:inline-block" @click="openHeaderChange">
-              <img v-if="userInfo.headerImg" class="header-img-box" :src="(userInfo.headerImg && userInfo.headerImg.slice(0, 4) !== 'http')?path+userInfo.headerImg:userInfo.headerImg">
+              <img v-if="userInfo.avatar" class="header-img-box" :src="(userInfo.avatar && userInfo.avatar.slice(0, 4) !== 'http')?path+userInfo.avatar:userInfo.avatar">
               <div v-else class="header-img-box">从媒体库选择</div>
             </div>
+          </el-form-item>
+
+          <el-form-item label="状态" prop="status" style="width:40%" required>
+            <el-radio-group v-model="userInfo.status">
+              <el-radio :label=1>启用</el-radio>
+              <el-radio :label=2>禁用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="性别" prop="sex" style="width:40%" required>
+            <el-radio-group v-model="userInfo.sex">
+              <el-radio :label=1>男</el-radio>
+              <el-radio :label=2>女</el-radio>
+            </el-radio-group>
           </el-form-item>
 
         </el-form>
@@ -139,7 +152,7 @@ import {
 import { getAuthorityList } from '@/api/authority'
 import CustomPic from '@/components/customPic/index.vue'
 import ChooseImg from '@/components/chooseImg/index.vue'
-import warningBar from '@/components/warningBar/warningBar.vue'
+// import warningBar from '@/components/warningBar/warningBar.vue'
 import { setUserInfo, resetPassword } from '@/api/user.js'
 
 import { nextTick, ref, watch } from 'vue'
@@ -151,16 +164,16 @@ const setAuthorityOptions = (AuthorityData, optionsData) => {
         AuthorityData.forEach(item => {
           if (item.children && item.children.length) {
             const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
+              id: item.id,
+              name: item.name,
               children: []
             }
             setAuthorityOptions(item.children, option.children)
             optionsData.push(option)
           } else {
             const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName
+              id: item.id,
+              name: item.name
             }
             optionsData.push(option)
           }
@@ -184,12 +197,22 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getUserList({ page: page.value, pageSize: pageSize.value })
-  if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+  const res = await getUserList({ page: page.value, size: pageSize.value })
+  if (res.code === 200) {
+    const arr = []
+    res.data.data.forEach(item => {
+      var roles = []
+      item.role_id.forEach(items => {
+        roles.push(items.role_id)
+      })
+      item.role_id = roles
+      arr.push(item)
+    })
+    console.log(arr)
+    tableData.value = arr
+    total.value = res.data.total
+    page.value = res.data.page
+    pageSize.value = res.data.size
   }
 }
 
@@ -199,8 +222,11 @@ watch(tableData, () => {
 
 const initPage = async() => {
   getTableData()
-  const res = await getAuthorityList({ page: 1, pageSize: 999 })
-  setOptions(res.data.list)
+  const res = await getAuthorityList(1, 999)
+  console.log(res)
+  if (res.code === 200) {
+    setOptions(res.data.data)
+  }
 }
 
 initPage()
@@ -233,10 +259,10 @@ const resetPasswordFunc = (row) => {
 }
 const setAuthorityIds = () => {
   tableData.value && tableData.value.forEach((user) => {
-    const authorityIds = user.authorities && user.authorities.map(i => {
-      return i.authorityId
+    const id = user.role_id && user.role_id.map(i => {
+      return i
     })
-    user.authorityIds = authorityIds
+    user.role_id = id
   })
 }
 
@@ -252,8 +278,8 @@ const setOptions = (authData) => {
 }
 
 const deleteUserFunc = async(row) => {
-  const res = await deleteUser({ id: row.ID })
-  if (res.code === 0) {
+  const res = await deleteUser({ id: row.id })
+  if (res.code === 200) {
     ElMessage.success('删除成功')
     row.visible = false
     await getTableData()
@@ -262,12 +288,12 @@ const deleteUserFunc = async(row) => {
 
 // 弹窗相关
 const userInfo = ref({
+  id: 0,
   username: '',
   password: '',
-  nickName: '',
-  headerImg: '',
-  authorityId: '',
-  authorityIds: [],
+  nickname: '',
+  avatar: '',
+  role_id: [],
 })
 
 const rules = ref({
@@ -288,7 +314,7 @@ const rules = ref({
 })
 const userForm = ref(null)
 const enterAddUserDialog = async() => {
-  userInfo.value.authorityId = userInfo.value.authorityIds[0]
+  // userInfo.value.role = userInfo.value.authorityIds[0]
   userForm.value.validate(async valid => {
     if (valid) {
       const req = {
@@ -304,7 +330,7 @@ const enterAddUserDialog = async() => {
       }
       if (dialogFlag.value === 'edit') {
         const res = await setUserInfo(req)
-        if (res.code === 0) {
+        if (res.code === 200) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData()
           closeAddUserDialog()
@@ -332,13 +358,13 @@ const changeAuthority = async(row, flag) => {
   if (flag) {
     return
   }
-
+  console.log(row)
   await nextTick()
   const res = await setUserAuthorities({
-    ID: row.ID,
-    authorityIds: row.authorityIds
+    id: row.id,
+    role_id: row.id
   })
-  if (res.code === 0) {
+  if (res.code === 200) {
     ElMessage({ type: 'success', message: '角色设置成功' })
   }
 }
@@ -346,6 +372,7 @@ const changeAuthority = async(row, flag) => {
 const openEdit = (row) => {
   dialogFlag.value = 'edit'
   userInfo.value = JSON.parse(JSON.stringify(row))
+  console.log(userInfo.value)
   addUserDialog.value = true
 }
 

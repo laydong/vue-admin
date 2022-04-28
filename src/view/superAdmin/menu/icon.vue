@@ -1152,7 +1152,7 @@ const options = reactive([
   }
 ])
 
-const metaData = ref(props.meta)
+const metaData = ref(props)
 if(!metaData.value.icon){
   metaData.value.icon = options[0].label
 }

@@ -102,10 +102,9 @@ export const updateBaseMenu = (data) => {
 // @Param data body api.GetById true "根据id获取菜单"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /menu/getBaseMenuById [post]
-export const getBaseMenuById = (data) => {
+export const getBaseMenuById = (id) => {
   return service({
-    url: '/menu/getBaseMenuById',
-    method: 'post',
-    data
+    url: '/v1/menu/web_info?id=' + id,
+    method: 'get'
   })
 }

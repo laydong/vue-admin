@@ -57,7 +57,7 @@ export const changePassword = (data) => {
 // @Router /user/getUserList [post]
 export const getUserList = (data) => {
   return service({
-    url: '/user/getUserList',
+    url: '/v1/user/list',
     method: 'post',
     data: data
   })
@@ -89,7 +89,7 @@ export const setUserAuthority = (data) => {
 // @Router /user/deleteUser [delete]
 export const deleteUser = (data) => {
   return service({
-    url: '/user/deleteUser',
+    url: '/v1/user/del',
     method: 'delete',
     data: data
   })
@@ -105,8 +105,8 @@ export const deleteUser = (data) => {
 // @Router /user/setUserInfo [put]
 export const setUserInfo = (data) => {
   return service({
-    url: '/user/setUserInfo',
-    method: 'put',
+    url: '/v1/user/set',
+    method: 'post',
     data: data
   })
 }
