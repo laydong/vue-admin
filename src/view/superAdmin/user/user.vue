@@ -26,7 +26,7 @@
               :options="authOptions"
               :show-all-levels="false"
               collapse-tags
-              :props="{ multiple:true,checkStrictly: true,label:'name',value:'role_id',disabled:'disabled',emitPath:false}"
+              :props="{ multiple:true,checkStrictly: true,label:'name',value:'id',disabled:'disabled',emitPath:false}"
               :clearable="false"
               @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
               @remove-tag="()=>{changeAuthority(scope.row,false)}"
@@ -144,9 +144,8 @@ export default {
 
 import {
   getUserList,
-  setUserAuthorities,
   register,
-  deleteUser
+  deleteUser, setUserRole,
 } from '@/api/user'
 
 import { getAuthorityList } from '@/api/authority'
@@ -290,9 +289,14 @@ const deleteUserFunc = async(row) => {
 const userInfo = ref({
   id: 0,
   username: '',
-  password: '',
   nickname: '',
   avatar: '',
+  email: '',
+  mobile: '',
+  sex: 1,
+  score: 0,
+  status: 0,
+  remarks: '',
   role_id: [],
 })
 
@@ -322,7 +326,7 @@ const enterAddUserDialog = async() => {
       }
       if (dialogFlag.value === 'add') {
         const res = await register(req)
-        if (res.code === 0) {
+        if (res.code === 200) {
           ElMessage({ type: 'success', message: '创建成功' })
           await getTableData()
           closeAddUserDialog()
@@ -351,6 +355,9 @@ const closeAddUserDialog = () => {
 const dialogFlag = ref('add')
 
 const addUser = () => {
+  userInfo.value = []
+  userInfo.value.status = 2
+  userInfo.value.sex = 1
   dialogFlag.value = 'add'
   addUserDialog.value = true
 }
@@ -358,11 +365,10 @@ const changeAuthority = async(row, flag) => {
   if (flag) {
     return
   }
-  console.log(row)
   await nextTick()
-  const res = await setUserAuthorities({
+  const res = await setUserRole({
     id: row.id,
-    role_id: row.id
+    role_id: row.role_id
   })
   if (res.code === 200) {
     ElMessage({ type: 'success', message: '角色设置成功' })
@@ -372,7 +378,6 @@ const changeAuthority = async(row, flag) => {
 const openEdit = (row) => {
   dialogFlag.value = 'edit'
   userInfo.value = JSON.parse(JSON.stringify(row))
-  console.log(userInfo.value)
   addUserDialog.value = true
 }
 

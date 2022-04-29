@@ -29,7 +29,7 @@ export const captcha = (data) => {
 // @Router /base/resige [post]
 export const register = (data) => {
   return service({
-    url: '/user/admin_register',
+    url: '/v1/user/add',
     method: 'post',
     data: data
   })
@@ -132,12 +132,12 @@ export const setSelfInfo = (data) => {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body api.setUserAuthorities true "设置用户权限"
+// @Param data body api.setUserRole true "设置用户权限"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"修改成功"}"
-// @Router /user/setUserAuthorities [post]
-export const setUserAuthorities = (data) => {
+// @Router /user/setUserRole [post]
+export const setUserRole = (data) => {
   return service({
-    url: '/user/setUserAuthorities',
+    url: '/v1/user/set_user_role',
     method: 'post',
     data: data
   })

@@ -6,16 +6,15 @@ import service from '@/utils/request'
 // @Produce application/json
 // @Param data body modelInterface.PageInfo true "分页获取用户列表"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /api/getApiList [post]
+// @Router /api/getApiList [get]
 // {
 //  page     int
 //	pageSize int
 // }
-export const getApiList = (data) => {
+export const getApiList = () => {
   return service({
-    url: '/api/getApiList',
-    method: 'post',
-    data
+    url: '/v1/menu/list',
+    method: 'get',
   })
 }
 
@@ -61,7 +60,7 @@ export const getApiById = (data) => {
 // @Router /api/updateApi [post]
 export const updateApi = (data) => {
   return service({
-    url: '/api/updateApi',
+    url: '/v1/menu/set',
     method: 'post',
     data
   })

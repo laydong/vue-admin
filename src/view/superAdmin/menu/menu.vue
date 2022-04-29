@@ -12,7 +12,7 @@
         <el-table-column align="left" label="路由Path" show-overflow-tooltip min-width="160" prop="path" />
         <el-table-column align="left" label="是否隐藏" min-width="100" prop="hidden">
           <template #default="scope">
-            <span>{{ scope.row.hidden==1?"隐藏":"显示" }}</span>
+            <span>{{ scope.row.hidden===1?"隐藏":"显示" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="left" label="父节点" min-width="90" prop="parent_id" />
@@ -246,7 +246,7 @@ const rules = reactive({
 })
 
 const page = ref(1)
-// const total = ref(0)
+const total = ref(0)
 const pageSize = ref(999)
 const tableData = ref([])
 const searchInfo = ref({})
@@ -255,9 +255,9 @@ const getTableData = async() => {
   const table = await getMenuList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 200) {
     tableData.value = table.data
-    // total.value = table.data.total
-    // page.value = table.data.page
-    // pageSize.value = table.data.pageSize
+    total.value = 999
+    page.value = 1
+    pageSize.value = 1
   }
 }
 
@@ -462,7 +462,6 @@ const editMenu = async(id) => {
   form.value = res.data
   isEdit.value = true
   setOptions()
-  console.log(id)
   dialogFormVisible.value = true
 }
 
