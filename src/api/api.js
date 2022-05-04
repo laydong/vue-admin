@@ -28,7 +28,7 @@ export const getApiList = () => {
 // @Router /api/createApi [post]
 export const createApi = (data) => {
   return service({
-    url: '/api/createApi',
+    url: '/v1/menu/add',
     method: 'post',
     data
   })
@@ -107,7 +107,7 @@ export const getAllApis = (data) => {
 // @Router /api/deleteApi [post]
 export const deleteApi = (data) => {
   return service({
-    url: '/api/deleteApi',
+    url: '/v1/menu/del',
     method: 'post',
     data
   })

@@ -65,7 +65,6 @@
       </el-table>
     </div>
 
-
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="上级API" prop="parent_id">
@@ -126,6 +125,7 @@ import {
   getApiList,
   updateApi,
   createApi,
+  deleteApi
 } from '@/api/api'
 import { reactive, ref } from 'vue'
 import { formatDate } from '@/utils/format'
@@ -145,7 +145,6 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(999)
 const tableData = ref([])
-// const searchInfo = ref({})
 // 查询
 const getTableData = async() => {
   const table = await getApiList()
@@ -165,49 +164,7 @@ const getTableData = async() => {
     pageSize.value = 1
   }
 }
-
 getTableData()
-
-// 新增参数
-// const addParameter = (form) => {
-//   if (!form.parameters) {
-//     form.parameters = []
-//   }
-//   form.parameters.push({
-//     type: 'query',
-//     key: '',
-//     value: ''
-//   })
-// }
-// 删除参数
-// const deleteParameter = (parameters, index) => {
-//   parameters.splice(index, 1)
-// }
-//
-// // 新增可控按钮
-// const addBtn = (form) => {
-//   console.log(form)
-//   if (!form.menuBtn) {
-//     form.menuBtn = []
-//   }
-//   form.menuBtn.push({
-//     name: '',
-//     desc: '',
-//   })
-// }
-// // 删除可控按钮
-// const deleteBtn = async(btns, index) => {
-//   const btn = btns[index]
-//   if (btn.ID === 0) {
-//     btns.splice(index, 1)
-//     return
-//   }
-//   const res = await canRemoveAuthorityBtnApi({ id: btn.ID })
-//   if (res.code === 0) {
-//     btns.splice(index, 1)
-//     return
-//   }
-// }
 
 const form = ref({
   id: 0,
@@ -221,14 +178,6 @@ const form = ref({
   status: 2,
   remark: '',
 })
-// const changeName = () => {
-//   form.value.path = form.value.name
-// }
-//
-// const handleClose = (done) => {
-//   initForm()
-//   done()
-// }
 // 删除菜单
 const deleteMenu = (id) => {
   ElMessageBox.confirm('此操作将永久删除所有角色下该菜单, 是否继续?', '提示', {
@@ -237,7 +186,7 @@ const deleteMenu = (id) => {
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteBaseMenu({ id })
+      const res = await deleteApi({ 'id': id })
       if (res.code === 200) {
         ElMessage({
           type: 'success',
@@ -282,7 +231,7 @@ const closeDialog = () => {
 }
 // 添加api菜单
 const enterDialog = async() => {
-  if (form.value.method === 1){
+  if (form.value.method === 1) {
     form.value.method = 'GET'
   } else {
     form.value.method = 'POST'
@@ -350,16 +299,6 @@ const editApiFunc = async(row) => {
   dialogTitle.value = '编辑菜单'
   dialogFormVisible.value = true
 }
-
-// 修改菜单方法
-// const editMenu = async(id) => {
-//   dialogTitle.value = '编辑菜单'
-//   const res = await getBaseMenuById(id)
-//   form.value = res.data
-//   isEdit.value = true
-//   setOptions()
-//   dialogFormVisible.value = true
-// }
 
 </script>
 

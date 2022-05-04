@@ -30,7 +30,7 @@ export const getMenuList = (data) => {
 // @Router /menu/getMenuList [post]
 export const addBaseMenu = (data) => {
   return service({
-    url: '/menu/addBaseMenu',
+    url: '/v1/menu/web_add',
     method: 'post',
     data
   })
@@ -76,7 +76,7 @@ export const getMenuAuthority = (id) => {
 // @Router /menu/deleteBaseMenu [post]
 export const deleteBaseMenu = (data) => {
   return service({
-    url: '/menu/deleteBaseMenu',
+    url: '/v1/menu/web_del',
     method: 'post',
     data
   })
@@ -88,7 +88,7 @@ export const deleteBaseMenu = (data) => {
 // @Router /menu/updateBaseMenu [post]
 export const updateBaseMenu = (data) => {
   return service({
-    url: '/menu/updateBaseMenu',
+    url: '/v1/menu/web_set',
     method: 'post',
     data
   })
