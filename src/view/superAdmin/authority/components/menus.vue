@@ -17,17 +17,17 @@
       <template #default="{ node , data }">
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
-          <span>
-            <el-button
-              type="text"
-              size="small"
-              :style="{color:row.name === data.name?'#E6A23C':'#85ce61'}"
-              :disabled="!node.checked"
-              @click="() => setDefault(data)"
-            >
-              {{ row.name === data.name?"首页":"设为首页" }}
-            </el-button>
-          </span>
+<!--          <span>-->
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              size="small"-->
+<!--              :style="{color:row.name === data.name?'#E6A23C':'#85ce61'}"-->
+<!--              :disabled="!node.checked"-->
+<!--              @click="() => setDefault(data)"-->
+<!--            >-->
+<!--              {{ row.name === data.name?"首页":"设为首页" }}-->
+<!--            </el-button>-->
+<!--          </span>-->
           <span v-if="data.length">
             <el-button
               type="text"

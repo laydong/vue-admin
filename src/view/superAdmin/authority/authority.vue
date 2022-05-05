@@ -109,9 +109,9 @@
         <el-tab-pane label="角色菜单">
           <Menus ref="menus" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
-        <el-tab-pane label="角色api">
-          <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />
-        </el-tab-pane>
+<!--        <el-tab-pane label="角色api">-->
+<!--          <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />-->
+<!--        </el-tab-pane>-->
       </el-tabs>
     </el-drawer>
   </div>
@@ -126,7 +126,7 @@ import {
 } from '@/api/authority'
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
-import Apis from '@/view/superAdmin/authority/components/apis.vue'
+// import Apis from '@/view/superAdmin/authority/components/apis.vue'
 import { formatDate } from '@/utils/format'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'

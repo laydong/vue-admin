@@ -12,7 +12,7 @@
         <el-table-column align="left" label="API路由" show-overflow-tooltip min-width="160" prop="url" />
         <el-table-column align="left" label="api类型" min-width="100" prop="hidden">
           <template #default="scope">
-            <span>{{ scope.row.type==1?"菜单API":"功能API" }}</span>
+            <span>{{ scope.row.type==1?"菜单API":"按钮API" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="left" label="父节点" min-width="90" prop="pid" />
@@ -24,16 +24,6 @@
         <el-table-column align="left" label="状态" min-width="100" prop="status">
           <template #default="scope">
             <span>{{ scope.row.status?"正常":"禁用" }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" label="图标" min-width="140" prop="icon">
-          <template #default="scope">
-            <div v-if="scope.row.icon" class="icon-column">
-              <el-icon>
-                <component :is="scope.row.icon" />
-              </el-icon>
-              <span>{{ scope.row.icon }}</span>
-            </div>
           </template>
         </el-table-column>
         <el-table-column align="left" label="排序" min-width="70" prop="sort" />
@@ -89,7 +79,7 @@
         <el-form-item label="API类型" prop="type" style="width:30%" required>
           <el-radio-group v-model="form.type">
             <el-radio :label="1">菜单API</el-radio>
-            <el-radio :label="2">功能API</el-radio>
+            <el-radio :label="2">按钮API</el-radio>
           </el-radio-group>
         </el-form-item>
 
