@@ -9,16 +9,21 @@
         :data="tableData"
         row-key="id"
       >
+        <el-table-column align="left" label="ID" min-width="50" prop="id" />
         <el-table-column align="left" label="头像" min-width="75">
           <template #default="scope">
             <CustomPic style="margin-top:8px" :pic-src="scope.row.avatar" />
           </template>
         </el-table-column>
-        <el-table-column align="left" label="ID" min-width="50" prop="id" />
         <el-table-column align="left" label="用户名" min-width="150" prop="username" />
         <el-table-column align="left" label="昵称" min-width="150" prop="nickname" />
         <el-table-column align="left" label="手机号" min-width="180" prop="mobile" />
         <el-table-column align="left" label="邮箱" min-width="180" prop="email" />
+        <el-table-column align="left" label="状态" min-width="100" prop="status">
+          <template #default="scope">
+            <span>{{ scope.row.status?"正常":"禁用" }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="用户角色" min-width="200">
           <template #default="scope">
             <el-cascader
@@ -42,7 +47,7 @@
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
                 <el-button type="primary" size="small" @click="deleteUserFunc(scope.row)">确定</el-button>
               </div>
-              <template #reference>
+              <template #reference  v-if="scope.row.id !==1">
                 <el-button type="text" icon="delete" size="small">删除</el-button>
               </template>
             </el-popover>

@@ -18,11 +18,12 @@
             <span>{{ scope.row.status?"正常":"禁用" }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="是否超管" min-width="100" prop="is_admin">
-          <template #default="scope">
-            <span>{{ scope.row.is_admin?"是":"否" }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column align="left" label="上级ID" min-width="180" prop="parent_id" />
+<!--        <el-table-column align="left" label="是否超管" min-width="100" prop="is_admin">-->
+<!--          <template #default="scope">-->
+<!--            <span>{{ scope.row.id ==1?"是":"否" }}</span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column align="left" label="备注" min-width="180" prop="remark" />
         <el-table-column align="left" label="创建时间" min-width="180">
           <template #default="scope">{{ formatDate(scope.row.created_at) }}</template>
@@ -33,10 +34,11 @@
         <el-table-column align="left" label="操作" width="460">
           <template #default="scope">
             <el-button
-              icon="setting"
-              size="small"
-              type="text"
-              @click="opdendrawer(scope.row)"
+                v-if="scope.row.id !==1"
+                icon="setting"
+                size="small"
+                type="text"
+                @click="opdendrawer(scope.row)"
             >设置权限</el-button>
             <el-button
               icon="plus"
@@ -45,16 +47,18 @@
               @click="addAuthority(scope.row.id)"
             >新增子角色</el-button>
             <el-button
-              icon="edit"
-              size="small"
-              type="text"
-              @click="editAuthority(scope.row)"
+                v-if="scope.row.id !==1"
+                icon="edit"
+                size="small"
+                type="text"
+                @click="editAuthority(scope.row)"
             >编辑</el-button>
             <el-button
-              icon="delete"
-              size="small"
-              type="text"
-              @click="deleteAuth(scope.row)"
+                v-if="scope.row.id !==1"
+                icon="delete"
+                size="small"
+                type="text"
+                @click="deleteAuth(scope.row)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -80,18 +84,18 @@
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
 
-        <el-form-item label="状态" prop="status" style="width:30%" required>
+        <el-form-item v-if="form.id !==1" label="状态" prop="status" style="width:30%" required>
           <el-radio-group v-model="form.status">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否超管" prop="is_admin" style="width:30%" required>
-          <el-radio-group v-model="form.is_admin">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="是否超管" prop="is_admin" style="width:30%" required>-->
+<!--          <el-radio-group v-model="form.is_admin">-->
+<!--            <el-radio :label="1">是</el-radio>-->
+<!--            <el-radio :label="0">否</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" autocomplete="off" />
         </el-form-item>
@@ -109,9 +113,6 @@
         <el-tab-pane label="角色菜单">
           <Menus ref="menus" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
-<!--        <el-tab-pane label="角色api">-->
-<!--          <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />-->
-<!--        </el-tab-pane>-->
       </el-tabs>
     </el-drawer>
   </div>
